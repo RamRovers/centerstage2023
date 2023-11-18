@@ -20,11 +20,11 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -54,9 +54,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Autonomous(name="Basic: Omni Linear OpMode", group="Linear Opmode")
 
-public class Omni extends LinearOpMode {
+
+
+public class linearOpMode extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -64,6 +65,12 @@ public class Omni extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+
+
+    private DcMotor mainArmDrive = null; // main
+    private DcMotor secondaryArmDrive = null;
+    private Servo leftClawDrive = null;
+    private Servo rightClawDrive = null;
 
     @Override
     public void runOpMode() {
@@ -74,6 +81,12 @@ public class Omni extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+
+        mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
+        secondaryArmDrive = hardwareMap.get(DcMotor.class, "secondary_arm_drive");
+        leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
+        rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
+
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -90,6 +103,11 @@ public class Omni extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
+        mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
+        secondaryArmDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftClawDrive.setDirection(Servo.Direction.FORWARD);
+        rightClawDrive.setDirection(Servo.Direction.FORWARD);
+
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -105,6 +123,39 @@ public class Omni extends LinearOpMode {
             double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral = gamepad1.left_stick_x;
             double yaw = gamepad1.right_stick_x;
+
+            double mArmPower;
+            double sArmPower;
+            double lClawPosition = 0.6;
+            double rClawPosition = 0.6;
+
+            if (gamepad1.dpad_up) {
+                mArmPower = 1;
+            } else if (gamepad1.dpad_down) {
+                mArmPower = -1;
+            } else {
+                mArmPower = 0;
+            } // else
+
+            if (gamepad1.dpad_left){
+                sArmPower = 1;
+            } else if(gamepad1.dpad_right){
+                sArmPower = -1;
+            } else{
+                sArmPower = 0;
+            }
+
+            if (gamepad1.left_bumper){
+                lClawPosition = 0.6; // close
+            } else if(gamepad1.left_trigger > 0){
+                lClawPosition = 0; // open
+            } // if
+
+            if (gamepad1.right_bumper){
+                rClawPosition = 0.6; // close
+            } else if(gamepad1.right_trigger > 0) {
+                rClawPosition = 0; // open
+            }
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -148,6 +199,12 @@ public class Omni extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
+
+            mainArmDrive.setPower(mArmPower);
+            secondaryArmDrive.setPower(sArmPower);
+            leftClawDrive.setPosition(lClawPosition);
+            rightClawDrive.setPosition(rClawPosition);
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
