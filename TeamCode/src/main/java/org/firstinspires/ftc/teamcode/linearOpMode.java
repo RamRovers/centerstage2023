@@ -61,11 +61,8 @@ public class linearOpMode extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
-
+    private DcMotor leftDrive = null;
+    private DcMotor rightDrive = null;
 
     private DcMotor mainArmDrive = null; // main
     private DcMotor secondaryArmDrive = null;
@@ -77,10 +74,10 @@ public class linearOpMode extends LinearOpMode {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
+
+        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+
 /*
         mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
         secondaryArmDrive = hardwareMap.get(DcMotor.class, "secondary_arm_drive");
@@ -91,41 +88,44 @@ public class linearOpMode extends LinearOpMode {
 
 
         // set rotating directions for the motors
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+
+
 /*
         mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
         secondaryArmDrive.setDirection(DcMotor.Direction.FORWARD);
         leftClawDrive.setDirection(Servo.Direction.FORWARD);
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
 */
-        droneDrive.setDirection(Servo.Direction.FORWARD);
+        droneDrive.setDirection(Servo.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        double dronePosition = 1;
 
         waitForStart();
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            droneDrive.setPosition(dronePosition);
+
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral = gamepad1.left_stick_x;
-            double yaw = gamepad1.right_stick_x;
+            double leftP = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double rightP = gamepad1.right_stick_y;
 
             double mArmPower;
             double sArmPower;
             double lClawPosition = 0.6;
             double rClawPosition = 0.6;
 
-            double dronePosition = 1;
-/*
+/*           droneDrive.setPosition(dronePosition);
+
             if (gamepad1.dpad_up) {
                 mArmPower = 1;
             } else if (gamepad1.dpad_down) {
@@ -153,19 +153,16 @@ public class linearOpMode extends LinearOpMode {
             } else if(gamepad1.right_trigger > 0) {
                 rClawPosition = 0; // open
             }*/
-
             if(gamepad1.x || gamepad1.y || gamepad1.b || gamepad1.a){
                 dronePosition = 0;
             }
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
-            // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower = axial + lateral + yaw;
-            double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower = axial - lateral + yaw;
-            double rightBackPower = axial + lateral - yaw;
+            // Set up a variable for each drive wheel to save the power level for telemetry
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
+
+            /* not using
             max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
             max = Math.max(max, Math.abs(leftBackPower));
             max = Math.max(max, Math.abs(rightBackPower));
@@ -175,17 +172,9 @@ public class linearOpMode extends LinearOpMode {
                 rightFrontPower /= max;
                 leftBackPower /= max;
                 rightBackPower /= max;
-            }
+            }*/
 
-            // This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
+
 
             /*
             leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
@@ -195,10 +184,9 @@ public class linearOpMode extends LinearOpMode {
             */
 
             // Send calculated power to wheels
-            leftFrontDrive.setPower(leftFrontPower);
-            rightFrontDrive.setPower(rightFrontPower);
-            leftBackDrive.setPower(leftBackPower);
-            rightBackDrive.setPower(rightBackPower);
+            leftDrive.setPower(leftP);
+            rightDrive.setPower(rightP);
+
 /*
             mainArmDrive.setPower(mArmPower);
             secondaryArmDrive.setPower(sArmPower);
@@ -206,12 +194,11 @@ public class linearOpMode extends LinearOpMode {
             rightClawDrive.setPosition(rClawPosition);
 */
 
-            droneDrive.setPosition(dronePosition);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            telemetry.addData("Left", leftP);
+            telemetry.addData("Right", rightP);
             telemetry.addData("button", gamepad1.x || gamepad1.y || gamepad1.b || gamepad1.a);
             telemetry.update();
         }
