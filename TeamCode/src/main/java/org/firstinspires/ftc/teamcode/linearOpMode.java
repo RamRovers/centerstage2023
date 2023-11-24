@@ -20,8 +20,9 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -55,8 +56,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-
-
+@TeleOp(name="RamRovTeleOp")
 public class linearOpMode extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
@@ -71,7 +71,7 @@ public class linearOpMode extends LinearOpMode {
     private DcMotor secondaryArmDrive = null;
     private Servo leftClawDrive = null;
     private Servo rightClawDrive = null;
-
+    private Servo droneDrive = null;
     @Override
     public void runOpMode() {
 
@@ -81,32 +81,27 @@ public class linearOpMode extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-
+/*
         mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
         secondaryArmDrive = hardwareMap.get(DcMotor.class, "secondary_arm_drive");
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
+*/
+        droneDrive = hardwareMap.get(Servo.class, "drone_drive");
 
 
-        // ########################################################################################
-        // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
-        // ########################################################################################
-        // Most robots need the motors on one side to be reversed to drive forward.
-        // The motor reversals shown here are for a "direct drive" robot (the wheels turn the same direction as the motor shaft)
-        // If your robot has additional gear reductions or uses a right-angled drive, it's important to ensure
-        // that your motors are turning in the correct direction.  So, start out with the reversals here, BUT
-        // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
-        // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
-        // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
+        // set rotating directions for the motors
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
+/*
         mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
         secondaryArmDrive.setDirection(DcMotor.Direction.FORWARD);
         leftClawDrive.setDirection(Servo.Direction.FORWARD);
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
+*/
+        droneDrive.setDirection(Servo.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -129,6 +124,8 @@ public class linearOpMode extends LinearOpMode {
             double lClawPosition = 0.6;
             double rClawPosition = 0.6;
 
+            double dronePosition = 1;
+/*
             if (gamepad1.dpad_up) {
                 mArmPower = 1;
             } else if (gamepad1.dpad_down) {
@@ -155,8 +152,11 @@ public class linearOpMode extends LinearOpMode {
                 rClawPosition = 0.6; // close
             } else if(gamepad1.right_trigger > 0) {
                 rClawPosition = 0; // open
-            }
+            }*/
 
+            if(gamepad1.x || gamepad1.y || gamepad1.b || gamepad1.a){
+                dronePosition = 0;
+            }
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
             double leftFrontPower = axial + lateral + yaw;
@@ -199,17 +199,20 @@ public class linearOpMode extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
-
+/*
             mainArmDrive.setPower(mArmPower);
             secondaryArmDrive.setPower(sArmPower);
             leftClawDrive.setPosition(lClawPosition);
             rightClawDrive.setPosition(rClawPosition);
+*/
 
+            droneDrive.setPosition(dronePosition);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            telemetry.addData("button", gamepad1.x || gamepad1.y || gamepad1.b || gamepad1.a);
             telemetry.update();
         }
     }
