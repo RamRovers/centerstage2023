@@ -59,10 +59,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name="RamRovTeleOp")
 public class linearOpMode extends LinearOpMode {
 
-    // Declare OpMode members for each of the 4 motors.
+    // Declare OpMode members for each of the motors.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotor leftFrontDrive = null, leftBackDrive = null;
+    private DcMotor rightFrontDrive = null, rightBackDrive = null;
 
     private DcMotor mainArmDrive = null; // main
     private DcMotor secondaryArmDrive = null;
@@ -74,10 +74,11 @@ public class linearOpMode extends LinearOpMode {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
 
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 /*
         mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
         secondaryArmDrive = hardwareMap.get(DcMotor.class, "secondary_arm_drive");
@@ -88,10 +89,11 @@ public class linearOpMode extends LinearOpMode {
 
 
         // set rotating directions for the motors
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
-
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
 /*
         mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -116,15 +118,18 @@ public class linearOpMode extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double leftP = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double rightP = gamepad1.right_stick_y;
+            double leftFrontPower = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double leftBackPower = -gamepad1.left_stick_y;
+            double rightFrontPower = gamepad1.right_stick_y;
+            double rightBackPower = gamepad1.right_stick_y;
 
             double mArmPower;
             double sArmPower;
             double lClawPosition = 0.6;
             double rClawPosition = 0.6;
 
-/*           droneDrive.setPosition(dronePosition);
+            /*
+            droneDrive.setPosition(dronePosition);
 
             if (gamepad1.dpad_up) {
                 mArmPower = 1;
@@ -184,9 +189,10 @@ public class linearOpMode extends LinearOpMode {
             */
 
             // Send calculated power to wheels
-            leftDrive.setPower(leftP);
-            rightDrive.setPower(rightP);
-
+            leftFrontDrive.setPower(leftFrontPower);
+            leftBackDrive.setPower(leftBackPower);
+            rightFrontDrive.setPower(rightFrontPower);
+            rightBackDrive.setPower(rightBackPower);
 /*
             mainArmDrive.setPower(mArmPower);
             secondaryArmDrive.setPower(sArmPower);
@@ -197,8 +203,10 @@ public class linearOpMode extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Left", leftP);
-            telemetry.addData("Right", rightP);
+            telemetry.addData("Left Front", leftFrontPower);
+            telemetry.addData("Left Back", leftBackPower);
+            telemetry.addData("Right Front", rightFrontPower);
+            telemetry.addData("Right Back", rightBackPower);
             telemetry.addData("button", gamepad1.x || gamepad1.y || gamepad1.b || gamepad1.a);
             telemetry.update();
         }
