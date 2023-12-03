@@ -28,7 +28,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
+ /*
  * This file contains an example of a Linear "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
@@ -79,12 +79,14 @@ public class linearOpMode extends LinearOpMode {
 
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-/*
+        
+        /*
         mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
         secondaryArmDrive = hardwareMap.get(DcMotor.class, "secondary_arm_drive");
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
-*/
+        
+        */
         droneDrive = hardwareMap.get(Servo.class, "drone_drive");
 
 
@@ -95,12 +97,13 @@ public class linearOpMode extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-/*
+        /*
         mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
         secondaryArmDrive.setDirection(DcMotor.Direction.FORWARD);
         leftClawDrive.setDirection(Servo.Direction.FORWARD);
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
-*/
+        */
+        
         droneDrive.setDirection(Servo.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
@@ -157,7 +160,10 @@ public class linearOpMode extends LinearOpMode {
                 rClawPosition = 0.6; // close
             } else if(gamepad1.right_trigger > 0) {
                 rClawPosition = 0; // open
-            }*/
+            }
+            */
+
+            //launch drone
             if(gamepad1.x || gamepad1.y || gamepad1.b || gamepad1.a){
                 dronePosition = 0;
             }
@@ -177,9 +183,8 @@ public class linearOpMode extends LinearOpMode {
                 rightFrontPower /= max;
                 leftBackPower /= max;
                 rightBackPower /= max;
-            }*/
-
-
+            }
+            */
 
             /*
             leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
@@ -193,13 +198,13 @@ public class linearOpMode extends LinearOpMode {
             leftBackDrive.setPower(leftBackPower);
             rightFrontDrive.setPower(rightFrontPower);
             rightBackDrive.setPower(rightBackPower);
-/*
+            
+            /*
             mainArmDrive.setPower(mArmPower);
             secondaryArmDrive.setPower(sArmPower);
             leftClawDrive.setPosition(lClawPosition);
             rightClawDrive.setPosition(rClawPosition);
-*/
-
+            */
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
