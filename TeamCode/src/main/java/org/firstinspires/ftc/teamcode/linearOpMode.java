@@ -64,10 +64,11 @@ public class linearOpMode extends LinearOpMode {
     private DcMotor leftFrontDrive = null, leftBackDrive = null;
     private DcMotor rightFrontDrive = null, rightBackDrive = null;
 
-    private DcMotor mainArmDrive = null; // main
-    private DcMotor secondaryArmDrive = null;
+    private DcMotor mainArmDrive = null; 
+    private Servo wristDrive = null;
     private Servo leftClawDrive = null;
     private Servo rightClawDrive = null;
+ 
     private Servo droneDrive = null;
     @Override
     public void runOpMode() {
@@ -80,13 +81,12 @@ public class linearOpMode extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         
-        /*
+        
         mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
-        secondaryArmDrive = hardwareMap.get(DcMotor.class, "secondary_arm_drive");
+        wristDrive = hardwareMap.get(Servo.class, "wrist_drive");
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
         
-        */
         droneDrive = hardwareMap.get(Servo.class, "drone_drive");
 
 
@@ -97,12 +97,10 @@ public class linearOpMode extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        /*
         mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
-        secondaryArmDrive.setDirection(DcMotor.Direction.FORWARD);
+        wristDrive.setDirection(Servo.Direction.FORWARD);
         leftClawDrive.setDirection(Servo.Direction.FORWARD);
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
-        */
         
         droneDrive.setDirection(Servo.Direction.REVERSE);
 
@@ -127,12 +125,11 @@ public class linearOpMode extends LinearOpMode {
             double rightBackPower = gamepad1.right_stick_y;
 
             double mArmPower;
-            double sArmPower;
+            double wristPosition = 0;
             double lClawPosition = 0.6;
             double rClawPosition = 0.6;
 
-            /*
-            droneDrive.setPosition(dronePosition);
+            //droneDrive.setPosition(dronePosition); add back maybe?
 
             if (gamepad1.dpad_up) {
                 mArmPower = 1;
@@ -143,25 +140,22 @@ public class linearOpMode extends LinearOpMode {
             } // else
 
             if (gamepad1.dpad_left){
-                sArmPower = 1;
+                wristPosition += 0.1;
             } else if(gamepad1.dpad_right){
-                sArmPower = -1;
-            } else{
-                sArmPower = 0;
+                wristPosition -= 0.1;
             }
 
             if (gamepad1.left_bumper){
-                lClawPosition = 0.6; // close
+                lClawPosition = 1; // close
             } else if(gamepad1.left_trigger > 0){
                 lClawPosition = 0; // open
             } // if
 
             if (gamepad1.right_bumper){
-                rClawPosition = 0.6; // close
+                rClawPosition = 1; // close
             } else if(gamepad1.right_trigger > 0) {
                 rClawPosition = 0; // open
             }
-            */
 
             //launch drone
             if(gamepad1.x || gamepad1.y || gamepad1.b || gamepad1.a){
@@ -199,12 +193,10 @@ public class linearOpMode extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             rightBackDrive.setPower(rightBackPower);
             
-            /*
             mainArmDrive.setPower(mArmPower);
-            secondaryArmDrive.setPower(sArmPower);
+            wristDrive.setPosition(wristPosition);
             leftClawDrive.setPosition(lClawPosition);
             rightClawDrive.setPosition(rClawPosition);
-            */
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
