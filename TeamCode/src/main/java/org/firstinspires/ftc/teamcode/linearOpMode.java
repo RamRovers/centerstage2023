@@ -28,7 +28,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
- /*
+/*
  * This file contains an example of a Linear "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
  * The names of OpModes appear on the menu of the FTC Driver Station.
@@ -64,11 +64,11 @@ public class linearOpMode extends LinearOpMode {
     private DcMotor leftFrontDrive = null, leftBackDrive = null;
     private DcMotor rightFrontDrive = null, rightBackDrive = null;
 
-    private DcMotor mainArmDrive = null; 
+    private DcMotor mainArmDrive = null;
     private Servo wristDrive = null;
     private Servo leftClawDrive = null;
     private Servo rightClawDrive = null;
- 
+
     private Servo droneDrive = null;
     @Override
     public void runOpMode() {
@@ -80,13 +80,13 @@ public class linearOpMode extends LinearOpMode {
 
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        
-        
+
+
         mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
         wristDrive = hardwareMap.get(Servo.class, "wrist_drive");
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
-        
+
         droneDrive = hardwareMap.get(Servo.class, "drone_drive");
 
 
@@ -101,7 +101,7 @@ public class linearOpMode extends LinearOpMode {
         wristDrive.setDirection(Servo.Direction.FORWARD);
         leftClawDrive.setDirection(Servo.Direction.FORWARD);
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
-        
+
         droneDrive.setDirection(Servo.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
@@ -131,13 +131,8 @@ public class linearOpMode extends LinearOpMode {
 
             //droneDrive.setPosition(dronePosition); add back maybe?
 
-            if (gamepad1.dpad_up) {
-                mArmPower = 1;
-            } else if (gamepad1.dpad_down) {
-                mArmPower = -1;
-            } else {
-                mArmPower = 0;
-            } // else
+            mArmPower = gamepad2.left_stick_y;
+            mArmPower = -gamepad2.left_stick_y;
 
             if (gamepad1.dpad_left){
                 wristPosition += 0.1;
@@ -145,20 +140,20 @@ public class linearOpMode extends LinearOpMode {
                 wristPosition -= 0.1;
             }
 
-            if (gamepad1.left_bumper){
+            if (gamepad2.left_trigger > 0){
                 lClawPosition = 1; // close
-            } else if(gamepad1.left_trigger > 0){
+            } else if(gamepad2.left_bumper){
                 lClawPosition = 0; // open
             } // if
 
-            if (gamepad1.right_bumper){
+            if (gamepad2.right_trigger > 0){
                 rClawPosition = 1; // close
-            } else if(gamepad1.right_trigger > 0) {
+            } else if(gamepad2.right_bumper) {
                 rClawPosition = 0; // open
             }
 
             //launch drone
-            if(gamepad1.x || gamepad1.y || gamepad1.b || gamepad1.a){
+            if(gamepad1.b){
                 dronePosition = 0;
             }
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
@@ -192,7 +187,7 @@ public class linearOpMode extends LinearOpMode {
             leftBackDrive.setPower(leftBackPower);
             rightFrontDrive.setPower(rightFrontPower);
             rightBackDrive.setPower(rightBackPower);
-            
+
             mainArmDrive.setPower(mArmPower);
             wristDrive.setPosition(wristPosition);
             leftClawDrive.setPosition(lClawPosition);
