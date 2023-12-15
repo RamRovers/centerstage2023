@@ -108,6 +108,10 @@ public class linearOpMode extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         double dronePosition = 1;
+        
+        double wristPosition = 0;
+        double lClawPosition = 1;
+        double rClawPosition = 1;
 
         waitForStart();
         runtime.reset();
@@ -147,11 +151,6 @@ public class linearOpMode extends LinearOpMode {
             double rightBackPower = gamepad1.right_stick_y * gear;
 
             double mArmPower = -gamepad2.left_stick_y;
-            double wristPosition = 0;
-            double lClawPosition = 0.6;
-            double rClawPosition = 0.6;
-
-            //droneDrive.setPosition(dronePosition); add back maybe?
 
             if (gamepad2.right_stick_y < 0 && wristPosition < 1){
                 wristPosition += 0.1;
