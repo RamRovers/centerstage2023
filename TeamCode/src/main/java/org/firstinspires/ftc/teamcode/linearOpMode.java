@@ -102,6 +102,7 @@ public class linearOpMode extends LinearOpMode {
 
         droneDrive.setDirection(Servo.Direction.REVERSE);
         boolean reversed = false;
+        double gear = 1;
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -133,7 +134,6 @@ public class linearOpMode extends LinearOpMode {
             double max;
 
             //putting this up here might be bad practice but idc
-            double gear = 1;
             if(gamepad1.right_bumper && gear < 1){
                 gear += 0.2;
             } else if(gamepad1.left_bumper && gear > 0){
