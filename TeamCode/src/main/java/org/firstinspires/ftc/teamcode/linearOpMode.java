@@ -237,6 +237,7 @@ public class linearOpMode extends LinearOpMode {
             telemetry.addData("Right Front", rightFrontPower);
             telemetry.addData("Right Back", rightBackPower);
             telemetry.addData("plane!!!", gamepad1.b);
+            telemetry.addData("holder dropped", gamepad2.dpad_down);
             telemetry.addData("current gear: ", gear);
             telemetry.update();
         }
