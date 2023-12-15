@@ -101,6 +101,7 @@ public class linearOpMode extends LinearOpMode {
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
 
         droneDrive.setDirection(Servo.Direction.REVERSE);
+        boolean reversed = false;
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -112,6 +113,21 @@ public class linearOpMode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            //reverse rotation moment
+            if(gamepad1.y && reversed){
+                reversed = false;
+                leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+                leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+                rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+                rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            } else if(gamepad1.y && !reversed){
+                reversed = true;
+                leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+                leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+                rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+                rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+            }
+            
             droneDrive.setPosition(dronePosition);
 
             double max;
@@ -148,12 +164,21 @@ public class linearOpMode extends LinearOpMode {
             } else if(gamepad2.left_bumper){
                 lClawPosition = 0; // open
             } // if
-
+            
             if (gamepad2.right_trigger > 0){
                 rClawPosition = 1; // close
             } else if(gamepad2.right_bumper) {
                 rClawPosition = 0; // open
             }
+
+            if(gamepad2.x){
+                lClawPosition = 0;
+                rClawPosition = 0;
+            } else if(gamepad2.a){
+                lClawPosition = 1;
+                rClawPosition = 1; 
+            }
+
 
             //launch drone
             if(gamepad1.b){
