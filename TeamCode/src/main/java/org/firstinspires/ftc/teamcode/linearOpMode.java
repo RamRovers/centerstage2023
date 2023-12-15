@@ -70,6 +70,7 @@ public class linearOpMode extends LinearOpMode {
     private Servo rightClawDrive = null;
 
     private Servo droneDrive = null;
+    private Servo armHolder = null;
     @Override
     public void runOpMode() {
 
@@ -87,6 +88,7 @@ public class linearOpMode extends LinearOpMode {
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
 
         droneDrive = hardwareMap.get(Servo.class, "drone_drive");
+        droneDrive = hardwareMap.get(Servo.class, "arm_holder");
 
         // set rotating directions for the motors
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -101,6 +103,7 @@ public class linearOpMode extends LinearOpMode {
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
 
         droneDrive.setDirection(Servo.Direction.REVERSE);
+        armHolder.setDirection(Servo.Direction.REVERSE);
         boolean reversed = false;
         double gear = 1;
 
@@ -108,7 +111,8 @@ public class linearOpMode extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         double dronePosition = 1;
-        
+        double holderPosition = 1;
+
         double wristPosition = 0;
         double lClawPosition = 1;
         double rClawPosition = 1;
@@ -132,8 +136,9 @@ public class linearOpMode extends LinearOpMode {
                 rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
                 rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
             }
-            
+
             droneDrive.setPosition(dronePosition);
+            armHolder.setPosition(holderPosition);
 
             double max;
 
@@ -163,7 +168,7 @@ public class linearOpMode extends LinearOpMode {
             } else if(gamepad2.left_bumper){
                 lClawPosition = 0; // open
             } // if
-            
+
             if (gamepad2.right_trigger > 0){
                 rClawPosition = 1; // close
             } else if(gamepad2.right_bumper) {
@@ -175,13 +180,18 @@ public class linearOpMode extends LinearOpMode {
                 rClawPosition = 0;
             } else if(gamepad2.a){
                 lClawPosition = 1;
-                rClawPosition = 1; 
+                rClawPosition = 1;
             }
 
 
             //launch drone
             if(gamepad1.b){
                 dronePosition = 0;
+            }
+
+            //drop arm holder
+            if(gamepad2.dpad_down){
+                holderPosition = 0;
             }
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry
@@ -227,6 +237,7 @@ public class linearOpMode extends LinearOpMode {
             telemetry.addData("Right Front", rightFrontPower);
             telemetry.addData("Right Back", rightBackPower);
             telemetry.addData("plane!!!", gamepad1.b);
+            telemetry.addData("holder dropped", gamepad2.dpad_down);
             telemetry.addData("current gear: ", gear);
             telemetry.update();
         }
