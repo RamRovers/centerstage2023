@@ -81,14 +81,12 @@ public class linearOpMode extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-
         mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
         wristDrive = hardwareMap.get(Servo.class, "wrist_drive");
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
 
         droneDrive = hardwareMap.get(Servo.class, "drone_drive");
-
 
         // set rotating directions for the motors
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -118,25 +116,30 @@ public class linearOpMode extends LinearOpMode {
 
             double max;
 
-            // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double leftFrontPower = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double leftBackPower = -gamepad1.left_stick_y;
-            double rightFrontPower = gamepad1.right_stick_y;
-            double rightBackPower = gamepad1.right_stick_y;
+            //putting this up here might be bad practice but idc
+            double gear = 1;
+            if(gamepad1.right_bumper && gear < 1){
+                gear += 0.2;
+            } else if(gamepad1.left_bumper && gear > 0){
+                gear -= 0.2;
+            }
 
-            double mArmPower;
+            // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
+            double leftFrontPower = -gamepad1.left_stick_y * gear;  // Note: pushing stick forward gives negative value
+            double leftBackPower = -gamepad1.left_stick_y * gear;
+            double rightFrontPower = gamepad1.right_stick_y * gear;
+            double rightBackPower = gamepad1.right_stick_y * gear;
+
+            double mArmPower = -gamepad2.left_stick_y;
             double wristPosition = 0;
             double lClawPosition = 0.6;
             double rClawPosition = 0.6;
 
             //droneDrive.setPosition(dronePosition); add back maybe?
 
-            mArmPower = gamepad2.left_stick_y;
-            mArmPower = -gamepad2.left_stick_y;
-
-            if (gamepad1.dpad_left){
+            if (gamepad2.right_stick_y < 0 && wristPosition < 1){
                 wristPosition += 0.1;
-            } else if(gamepad1.dpad_right){
+            } else if(gamepad2.right_stick_y > 0 && wristPosition > 0){
                 wristPosition -= 0.1;
             }
 
@@ -199,7 +202,8 @@ public class linearOpMode extends LinearOpMode {
             telemetry.addData("Left Back", leftBackPower);
             telemetry.addData("Right Front", rightFrontPower);
             telemetry.addData("Right Back", rightBackPower);
-            telemetry.addData("button", gamepad1.x || gamepad1.y || gamepad1.b || gamepad1.a);
+            telemetry.addData("plane!!!", gamepad1.b);
+            telemetry.addData("current gear: ", gear);
             telemetry.update();
         }
     }
