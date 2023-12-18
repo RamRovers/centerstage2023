@@ -70,7 +70,7 @@ public class linearOpMode extends LinearOpMode {
     private Servo rightClawDrive = null;
 
     private Servo droneDrive = null;
-    private Servo armHolder = null;
+    //private Servo armHolder = null;
     @Override
     public void runOpMode() {
 
@@ -103,7 +103,7 @@ public class linearOpMode extends LinearOpMode {
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
 
         droneDrive.setDirection(Servo.Direction.REVERSE);
-        armHolder.setDirection(Servo.Direction.REVERSE);
+        //armHolder.setDirection(Servo.Direction.REVERSE);
         boolean reversed = false;
         double gear = 1;
 
@@ -138,7 +138,7 @@ public class linearOpMode extends LinearOpMode {
             }
 
             droneDrive.setPosition(dronePosition);
-            armHolder.setPosition(holderPosition);
+            //armHolder.setPosition(holderPosition);
 
             double max;
 
