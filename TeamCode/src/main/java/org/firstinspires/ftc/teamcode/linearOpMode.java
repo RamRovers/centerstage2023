@@ -88,7 +88,7 @@ public class linearOpMode extends LinearOpMode {
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
 
         droneDrive = hardwareMap.get(Servo.class, "drone_drive");
-        droneDrive = hardwareMap.get(Servo.class, "arm_holder");
+        //armHolder = hardwareMap.get(Servo.class, "arm_holder");
 
         // set rotating directions for the motors
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
