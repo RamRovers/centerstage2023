@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "RamRovAutoOp")
 public class autoOpMode extends LinearOpMode{
+    //CLOSE LIBERALS
+    //-------------
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -19,13 +21,11 @@ public class autoOpMode extends LinearOpMode{
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-
     private DcMotor mainArmDrive = null; // main
-    private DcMotor secondaryArmDrive = null;
+    private DcMotor slideDrive = null;
     private Servo leftClawDrive = null;
     private Servo rightClawDrive = null;
     private Servo droneDrive = null;
-
     @Override
     public void runOpMode() {
 
@@ -36,9 +36,10 @@ public class autoOpMode extends LinearOpMode{
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-        /*
+
         mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
-        secondaryArmDrive = hardwareMap.get(DcMotor.class, "secondary_arm_drive");
+        slideDrive = hardwareMap.get(DcMotor.class, "slide_drive");
+        /*
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
         */
@@ -64,20 +65,40 @@ public class autoOpMode extends LinearOpMode{
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-            leftFrontDrive.setPower(1);
-            rightFrontDrive.setPower(1);
-            leftBackDrive.setPower(1);
-            rightBackDrive.setPower(1);
+        move(1, 1000);
+        turn(1, 1);
+        move(1, 3);
 
+    }
 
-            sleep(500);
+    public void move(double pow, long dur){
+        leftFrontDrive.setPower(pow);
+        leftBackDrive.setPower(pow);
+        rightFrontDrive.setPower(pow);
+        rightBackDrive.setPower(pow);
+        sleep(dur);
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+    }
 
-            leftFrontDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightBackDrive.setPower(0);
-        }
+    public void turn(double dir, long dur){
+        leftFrontDrive.setPower(dir);
+        leftBackDrive.setPower(dir);
+        rightFrontDrive.setPower(-dir);
+        rightBackDrive.setPower(-dir);
+        sleep(dur);
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+    }
+
+    public void setArm(double pow){
+        mainArmDrive.setPower(pow);
+    }
+    public void setSlide(double pow){
+        slideDrive.setPower(pow);
     }
 }
