@@ -13,6 +13,36 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class autoOpMode extends LinearOpMode{
     //CLOSE LIBERALS
     //-------------
+    private VisionPortal visionPortal;
+	private ColourMassDetectionProcessor colourMassDetectionProcessor;
+
+    // the current range set by lower and upper is the full range
+	// HSV takes the form: (HUE, SATURATION, VALUE)
+	// which means to select our colour, only need to change HUE
+	// the domains are: ([0, 180], [0, 255], [0, 255])
+	// this is tuned to detect red, so you will need to experiment to fine tune it for your robot
+	// and experiment to fine tune it for blue
+	Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
+	Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
+	double minArea = 100; // the minimum area for the detection to consider for your prop
+		
+	colourMassDetectionProcessor = new ColourMassDetectionProcessor(
+				lower,
+				upper,
+				() -> minArea, // these are lambda methods, in case we want to change them while the match is running, for us to tune them or something
+				() -> 213, // the left dividing line, in this case the left third of the frame
+				() -> 426 // the left dividing line, in this case the right third of the frame
+		);
+		visionPortal = new VisionPortal.Builder()
+				.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1")) // the camera on your robot is named "Webcam 1" by default
+				.addProcessor(colourMassDetectionProcessor)
+				.build();
+		
+		// you may also want to take a look at some of the examples for instructions on
+		// how to have a switchable camera (switch back and forth between two cameras)
+		// or how to manually edit the exposure and gain, to account for different lighting conditions
+		// these may be extra features for you to work on to ensure that your robot performs
+		// consistently, even in different environments
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
