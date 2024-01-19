@@ -14,9 +14,23 @@ public class autoOpMode extends LinearOpMode{
     //CLOSE LIBERALS
     //-------------
     private VisionPortal visionPortal;
-	private ColourMassDetectionProcessor colourMassDetectionProcessor;
+    private ColourMassDetectionProcessor colourMassDetectionProcessor;
 
-    // the current range set by lower and upper is the full range
+    // Declare OpMode members for each of the 4 motors.
+    private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor leftFrontDrive = null;
+    private DcMotor leftBackDrive = null;
+    private DcMotor rightFrontDrive = null;
+    private DcMotor rightBackDrive = null;
+
+    private DcMotor mainArmDrive = null; // main
+    private DcMotor slideDrive = null;
+    private Servo leftClawDrive = null;
+    private Servo rightClawDrive = null;
+    private Servo droneDrive = null;
+    @Override
+    public void runOpMode() {
+	// the current range set by lower and upper is the full range
 	// HSV takes the form: (HUE, SATURATION, VALUE)
 	// which means to select our colour, only need to change HUE
 	// the domains are: ([0, 180], [0, 255], [0, 255])
@@ -43,22 +57,7 @@ public class autoOpMode extends LinearOpMode{
 		// or how to manually edit the exposure and gain, to account for different lighting conditions
 		// these may be extra features for you to work on to ensure that your robot performs
 		// consistently, even in different environments
-
-    // Declare OpMode members for each of the 4 motors.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
-
-    private DcMotor mainArmDrive = null; // main
-    private DcMotor slideDrive = null;
-    private Servo leftClawDrive = null;
-    private Servo rightClawDrive = null;
-    private Servo droneDrive = null;
-    @Override
-    public void runOpMode() {
-
+	    
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
