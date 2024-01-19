@@ -65,7 +65,7 @@ public class linearOpMode extends LinearOpMode {
     private DcMotor rightFrontDrive = null, rightBackDrive = null;
 
     private DcMotor mainArmDrive = null;
-    private Servo wristDrive = null;
+    private DcMotor slideDrive = null;
     private Servo leftClawDrive = null;
     private Servo rightClawDrive = null;
 
@@ -83,7 +83,7 @@ public class linearOpMode extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
         mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
-        wristDrive = hardwareMap.get(Servo.class, "wrist_drive");
+        slideDrive = hardwareMap.get(Servo.class, "slide_drive");
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
 
@@ -98,7 +98,7 @@ public class linearOpMode extends LinearOpMode {
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
-        wristDrive.setDirection(Servo.Direction.FORWARD);
+        slideDrive.setDirection(Servo.Direction.FORWARD);
         leftClawDrive.setDirection(Servo.Direction.FORWARD);
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
 
