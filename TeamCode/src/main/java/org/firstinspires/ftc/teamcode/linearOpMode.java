@@ -113,7 +113,7 @@ public class linearOpMode extends LinearOpMode {
         double dronePosition = 1;
         double holderPosition = 1;
 
-        double wristPosition = 0;
+        double slidePower = 0;
         double lClawPosition = 1;
         double rClawPosition = 1;
 
@@ -157,23 +157,23 @@ public class linearOpMode extends LinearOpMode {
 
             double mArmPower = -gamepad2.left_stick_y;
 
-            if (gamepad2.right_stick_y < 0 && wristPosition < 1){
-                wristPosition += 0.1;
-            } else if(gamepad2.right_stick_y > 0 && wristPosition > 0){
-                wristPosition -= 0.1;
+            //slide toggle
+            if(gamepad2.right_bumper){
+                if(slidePower == 0){
+                    slidePower = 1;
+                } else{
+                    slidePower = 0;
+                }
             }
 
-            if (gamepad2.left_trigger > 0){
-                lClawPosition = 1; // close
-            } else if(gamepad2.left_bumper){
-                lClawPosition = 0; // open
-            } // if
-
-            if (gamepad2.right_trigger > 0){
-                rClawPosition = 1; // close
-            } else if(gamepad2.right_bumper) {
-                rClawPosition = 0; // open
-            }
+            if (gamepad2.left_bumper){
+                if(lClawPosition == 0){
+                    lClawPosition = 1; // close
+                    rClawPosition = 1; // close
+                } else{
+                    lClawPosition = 0; // open
+                    rClawPosition = 0; // open
+                }
 
             if(gamepad2.x){
                 lClawPosition = 0;
@@ -226,7 +226,7 @@ public class linearOpMode extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
 
             mainArmDrive.setPower(mArmPower);
-            wristDrive.setPosition(wristPosition);
+            slideDrive.setPower(slidePower);
             leftClawDrive.setPosition(lClawPosition);
             rightClawDrive.setPosition(rClawPosition);
 
