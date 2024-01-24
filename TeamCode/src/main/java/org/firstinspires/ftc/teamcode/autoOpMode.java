@@ -148,4 +148,9 @@ public class autoOpMode extends LinearOpMode{
     public void setSlide(double pow){
         slideDrive.setPower(pow);
     }
+
+    public void setClaw(double pos){
+	leftClawDrive.setPosition(pos);
+	rightClawDrive.setPosition(pos);
+    }
 }
