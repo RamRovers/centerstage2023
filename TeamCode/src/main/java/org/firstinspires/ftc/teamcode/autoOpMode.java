@@ -93,7 +93,7 @@ public class autoOpMode extends LinearOpMode{
 
         waitForStart();
         runtime.reset();
-
+	move(1, 1500)
 	// gets the recorded prop position
 		ColourMassDetectionProcessor.PropPositions recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
 		
@@ -107,7 +107,6 @@ public class autoOpMode extends LinearOpMode{
 		switch (recordedPropPosition) {
 			case LEFT:
 				turn(1, 1000)
-				move(1, 1000)
 				break;
 			case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
 			case MIDDLE:
@@ -116,7 +115,6 @@ public class autoOpMode extends LinearOpMode{
 			case RIGHT:
 				// code to do if we saw the prop on the right
 				turn(-1, 1000)
-				move(1, 1000)
 		}
     }
 
