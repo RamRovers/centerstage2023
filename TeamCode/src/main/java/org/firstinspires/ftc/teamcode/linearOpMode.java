@@ -64,7 +64,7 @@ public class linearOpMode extends LinearOpMode {
     private DcMotor leftFrontDrive = null, leftBackDrive = null;
     private DcMotor rightFrontDrive = null, rightBackDrive = null;
 
-    private DcMotor mainArmDrive = null;
+    private Servo mainArmDrive = null;
     private DcMotor slideDrive = null;
     private Servo leftClawDrive = null;
     private Servo rightClawDrive = null;
@@ -82,8 +82,8 @@ public class linearOpMode extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-        mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
-        slideDrive = hardwareMap.get(Servo.class, "slide_drive");
+        mainArmDrive = hardwareMap.get(Servo.class, "main_arm_drive");
+        slideDrive = hardwareMap.get(DcMotor.class, "slide_drive");
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
 
@@ -97,8 +97,8 @@ public class linearOpMode extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
-        slideDrive.setDirection(Servo.Direction.FORWARD);
+        mainArmDrive.setDirection(Servo.Direction.FORWARD);
+        slideDrive.setDirection(DcMotor.Direction.FORWARD);
         leftClawDrive.setDirection(Servo.Direction.FORWARD);
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
 
@@ -116,6 +116,7 @@ public class linearOpMode extends LinearOpMode {
         double slidePower = 0;
         double lClawPosition = 1;
         double rClawPosition = 1;
+        double mArmPower = 0; // its actually a servo, too lazy to change var name
 
         waitForStart();
         runtime.reset();
@@ -155,14 +156,15 @@ public class linearOpMode extends LinearOpMode {
             double rightFrontPower = gamepad1.right_stick_y * gear;
             double rightBackPower = gamepad1.right_stick_y * gear;
 
-            double mArmPower = -gamepad2.left_stick_y;
+            double slidePower = -gamepad2.left_stick_y;
+            slideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-            //slide toggle
+            //arm toggle
             if(gamepad2.right_bumper){
-                if(slidePower == 0){
-                    slidePower = 1;
+                if(mArmPower == 0){
+                    mArmPower = 1;
                 } else{
-                    slidePower = 0;
+                    mArmPower = 0;
                 }
             }
 
@@ -225,7 +227,7 @@ public class linearOpMode extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             rightBackDrive.setPower(rightBackPower);
 
-            mainArmDrive.setPower(mArmPower);
+            mainArmDrive.setPosition(mArmPower);
             slideDrive.setPower(slidePower);
             leftClawDrive.setPosition(lClawPosition);
             rightClawDrive.setPosition(rClawPosition);
