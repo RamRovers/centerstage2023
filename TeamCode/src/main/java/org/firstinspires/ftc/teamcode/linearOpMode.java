@@ -87,6 +87,8 @@ public class linearOpMode extends LinearOpMode {
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
 
+        slideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         droneDrive = hardwareMap.get(Servo.class, "drone_drive");
         //armHolder = hardwareMap.get(Servo.class, "arm_holder");
 
@@ -157,7 +159,6 @@ public class linearOpMode extends LinearOpMode {
             double rightBackPower = gamepad1.right_stick_y * gear;
 
             double slidePower = -gamepad2.left_stick_y;
-            slideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             //arm toggle
             if(gamepad2.right_bumper){
