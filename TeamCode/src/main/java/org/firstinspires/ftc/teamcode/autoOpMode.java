@@ -93,7 +93,8 @@ public class autoOpMode extends LinearOpMode{
 
         waitForStart();
         runtime.reset();
-	move(1, 1500)
+	setClaw(1); // closes the claw on preloaded pixels hopefully
+	move(1, 1500); //moves up to the lines
 	// gets the recorded prop position
 		ColourMassDetectionProcessor.PropPositions recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
 		
@@ -104,18 +105,20 @@ public class autoOpMode extends LinearOpMode{
 		}
 		
 		// now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
+	    	// turn toward the line with the prop
 		switch (recordedPropPosition) {
 			case LEFT:
 				turn(1, 1000)
 				break;
 			case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
 			case MIDDLE:
-				move(1, 1000)
 				break;
 			case RIGHT:
 				// code to do if we saw the prop on the right
 				turn(-1, 1000)
 		}
+	    	//place pixel
+	    	setClaw(0);
     }
 
     public void move(double pow, long dur){
