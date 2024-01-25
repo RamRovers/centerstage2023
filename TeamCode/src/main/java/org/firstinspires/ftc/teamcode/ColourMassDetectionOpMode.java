@@ -25,15 +25,18 @@ public class ColourMassDetectionOpMode extends OpMode {
 		// HSV takes the form: (HUE, SATURATION, VALUE)
 		// which means to select our colour, only need to change HUE
 		// the domains are: ([0, 180], [0, 255], [0, 255])
-		// this is tuned to detect red, so you will need to experiment to fine tune it for your robot
-		// and experiment to fine tune it for blue
-		Scalar lower = new Scalar(150, 100, 100); // the lower hsv threshold for your detection
-		Scalar upper = new Scalar(180, 255, 255); // the upper hsv threshold for your detection
+		// ! THESE VALUES ARE TUNED BUT NOT TESTED!
+    		Scalar lowerRed = new Scalar(150.0, 100.0, 100.0); // the lower hsv threshold for your detection
+    		Scalar upperRed = new Scalar(180.0, 255.0, 255.0); // the upper hsv threshold for your detection
+    		// TODO: Allow Blue and Red Switching with Hardcoded Opmodes
+    		Scalar lowerBlue = new Scalar(90.0, 100.0, 100.0); // the lower hsv threshold for your detection
+    		Scalar upperBlue = new Scalar(120.0, 255.0, 255.0); // the upper hsv threshold for your detection
+		
 		double minArea = 100; // the minimum area for the detection to consider for your prop
 		
 		colourMassDetectionProcessor = new ColourMassDetectionProcessor(
-				lower,
-				upper,
+				lowerRed,
+				upperRed,
 				() -> minArea, // these are lambda methods, in case we want to change them while the match is running, for us to tune them or something
 				() -> 213, // the left dividing line, in this case the left third of the frame
 				() -> 426 // the left dividing line, in this case the right third of the frame
