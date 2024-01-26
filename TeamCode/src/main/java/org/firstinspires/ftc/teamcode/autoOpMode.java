@@ -31,6 +31,8 @@ public class autoOpMode extends LinearOpMode{
     private Servo droneDrive = null;
     @Override
     public void runOpMode() {
+
+	slideDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 	// the current range set by lower and upper is the full range
 	// HSV takes the form: (HUE, SATURATION, VALUE)
 	// which means to select our colour, only need to change HUE
@@ -96,10 +98,14 @@ public class autoOpMode extends LinearOpMode{
         runtime.reset();
 	setArm(0);
 	setClaw(1); // closes the claw on preloaded pixels hopefully
-	move(1, 1500); //moves up to the lines
+	move(1, 1000); //moves up to the lines
 
 	//hardcoding until we get cam to work
-	
+	turn(1, 1000);
+	move(1, 3000);
+	setArm(1);
+	setSlide(1);
+	sleep(1000);
 	    
 	// gets the recorded prop position
 		ColourMassDetectionProcessor.PropPositions recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
