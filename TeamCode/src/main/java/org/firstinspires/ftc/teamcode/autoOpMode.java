@@ -106,6 +106,8 @@ public class autoOpMode extends LinearOpMode{
 	setArm(1);
 	setSlide(1);
 	sleep(1000);
+	setSlide(0);
+	setClaw(0);
 	    
 	// gets the recorded prop position
 		ColourMassDetectionProcessor.PropPositions recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
