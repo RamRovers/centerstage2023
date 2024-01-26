@@ -24,7 +24,7 @@ public class autoOpMode extends LinearOpMode{
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    private DcMotor mainArmDrive = null; // main
+    private Servo mainArmDrive = null; // main
     private DcMotor slideDrive = null;
     private Servo leftClawDrive = null;
     private Servo rightClawDrive = null;
@@ -67,7 +67,7 @@ public class autoOpMode extends LinearOpMode{
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
 
-        mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
+        mainArmDrive = hardwareMap.get(Servo.class, "main_arm_drive");
         slideDrive = hardwareMap.get(DcMotor.class, "slide_drive");
         /*
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
@@ -80,7 +80,7 @@ public class autoOpMode extends LinearOpMode{
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 /*
-        mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
+        mainArmDrive.setDirection(Servo.Direction.FORWARD);
         secondaryArmDrive.setDirection(DcMotor.Direction.FORWARD);
         leftClawDrive.setDirection(Servo.Direction.FORWARD);
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
@@ -94,8 +94,13 @@ public class autoOpMode extends LinearOpMode{
 
         waitForStart();
         runtime.reset();
+	setArm(0);
 	setClaw(1); // closes the claw on preloaded pixels hopefully
 	move(1, 1500); //moves up to the lines
+
+	//hardcoding until we get cam to work
+	
+	    
 	// gets the recorded prop position
 		ColourMassDetectionProcessor.PropPositions recordedPropPosition = colourMassDetectionProcessor.getRecordedPropPosition();
 		
@@ -107,19 +112,20 @@ public class autoOpMode extends LinearOpMode{
 		
 		// now we can use recordedPropPosition in our auto code to modify where we place the purple and yellow pixels
 	    	// turn toward the line with the prop
-		switch (recordedPropPosition) {
-			case LEFT:
-				turn(1, 1000)
-				break;
-			case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
-			case MIDDLE:
-				break;
-			case RIGHT:
-				// code to do if we saw the prop on the right
-				turn(-1, 1000)
-		}
-	    	//place pixel
-	    	setClaw(0);
+		// switch (recordedPropPosition) {
+		// 	case LEFT:
+		// 		turn(1, 1000)
+		// 		break;
+		// 	case UNFOUND: // we can also just add the unfound case here to do fallthrough intstead of the overriding method above, whatever you prefer!
+		// 	case MIDDLE:
+		// 		break;
+		// 	case RIGHT:
+		// 		// code to do if we saw the prop on the right
+		// 		turn(-1, 1000)
+		// }
+	 //    	//place pixel
+	 //    	setClaw(0);
+	
     }
 
     public void move(double pow, long dur){
@@ -146,8 +152,8 @@ public class autoOpMode extends LinearOpMode{
         rightBackDrive.setPower(0);
     }
 
-    public void setArm(double pow){
-        mainArmDrive.setPower(pow);
+    public void setArm(double pos){
+        mainArmDrive.setPosition(pos);
     }
     public void setSlide(double pow){
         slideDrive.setPower(pow);
