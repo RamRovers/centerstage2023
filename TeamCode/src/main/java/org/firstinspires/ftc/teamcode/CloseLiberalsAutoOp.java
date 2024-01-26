@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.ColourMassDetectionOpMode;
 
 
-@Autonomous(name = "RamRovAutoOp")
+@Autonomous(name = "CloseLiberalsAutoOp")
 public class autoOpMode extends LinearOpMode{
     //CLOSE LIBERALS
     //-------------
