@@ -64,7 +64,7 @@ public class linearOpMode extends LinearOpMode {
     private DcMotor leftFrontDrive = null, leftBackDrive = null;
     private DcMotor rightFrontDrive = null, rightBackDrive = null;
 
-    private Servo mainArmDrive = null;
+    private DcMotor mainArmDrive = null;
     private DcMotor slideDrive = null;
     private Servo leftClawDrive = null;
     private Servo rightClawDrive = null;
@@ -82,7 +82,7 @@ public class linearOpMode extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-        mainArmDrive = hardwareMap.get(Servo.class, "main_arm_drive");
+        mainArmDrive = hardwareMap.get(DcMotor.class, "main_arm_drive");
         slideDrive = hardwareMap.get(DcMotor.class, "slide_drive");
         leftClawDrive = hardwareMap.get(Servo.class, "left_claw_drive");
         rightClawDrive = hardwareMap.get(Servo.class, "right_claw_drive");
@@ -99,7 +99,7 @@ public class linearOpMode extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        mainArmDrive.setDirection(Servo.Direction.FORWARD);
+        mainArmDrive.setDirection(DcMotor.Direction.FORWARD);
         slideDrive.setDirection(DcMotor.Direction.FORWARD);
         leftClawDrive.setDirection(Servo.Direction.FORWARD);
         rightClawDrive.setDirection(Servo.Direction.FORWARD);
@@ -118,7 +118,7 @@ public class linearOpMode extends LinearOpMode {
         double slidePower = 0;
         double lClawPosition = 1;
         double rClawPosition = 1;
-        double mArmPower = 0; // its actually a servo, too lazy to change var name
+        double mArmPower = 0;
 
         waitForStart();
         runtime.reset();
@@ -126,7 +126,7 @@ public class linearOpMode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             //reverse rotation moment
-            if(gamepad1.y && reversed){
+            /*if(gamepad1.y && reversed){
                 reversed = false;
                 leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
                 leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -138,52 +138,58 @@ public class linearOpMode extends LinearOpMode {
                 leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
                 rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
                 rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-            }
+            }*/
 
             droneDrive.setPosition(dronePosition);
             //armHolder.setPosition(holderPosition);
 
             double max;
 
-            //putting this up here might be bad practice but idc
+            /*putting this up here might be bad practice but idc
             if(gamepad1.right_bumper && gear < 1){
                 gear += 0.2;
             } else if(gamepad1.left_bumper && gear > 0){
                 gear -= 0.2;
-            }
+            }*/
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double leftFrontPower = -gamepad1.left_stick_y * gear;  // Note: pushing stick forward gives negative value
-            double leftBackPower = -gamepad1.left_stick_y * gear;
-            double rightFrontPower = gamepad1.right_stick_y * gear;
-            double rightBackPower = gamepad1.right_stick_y * gear;
+            double leftFrontPower = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double leftBackPower = -gamepad1.left_stick_y;
+            double rightFrontPower = gamepad1.right_stick_y;
+            double rightBackPower = gamepad1.right_stick_y;
 
-            double slidePower = -gamepad2.left_stick_y;
 
-            //arm toggle
+
             if(gamepad2.right_bumper){
-                if(mArmPower == 0){
-                    mArmPower = 1;
-                } else{
-                    mArmPower = 0;
-                }
+                slidePower = 1;
+            }else if(gamepad2.left_bumper){
+                slidePower = 0;
             }
 
-            if (gamepad2.left_bumper){
-                if(lClawPosition == 0){
+            if(gamepad2.right_trigger > 0){
+                mArmPower = 1;
+            }else if(gamepad2.left_trigger > 0) {
+                mArmPower = 0;
+            }
+
+            if (gamepad2.left_bumper) {
+                if (lClawPosition == 0) {
                     lClawPosition = 1; // close
                     rClawPosition = 1; // close
-                } else{
+                } else {
                     lClawPosition = 0; // open
                     rClawPosition = 0; // open
                 }
+            }
 
-            if(gamepad2.x){
-                lClawPosition = 0;
-                rClawPosition = 0;
-            } else if(gamepad2.a){
-                lClawPosition = 1;
-                rClawPosition = 1;
+            if(gamepad2.y){
+                if(lClawPosition == 0){
+                    lClawPosition = 1;
+                    rClawPosition = 1;
+                } else{
+                    lClawPosition = 0;
+                    rClawPosition = 0;
+                }
             }
 
 
@@ -228,7 +234,7 @@ public class linearOpMode extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             rightBackDrive.setPower(rightBackPower);
 
-            mainArmDrive.setPosition(mArmPower);
+            mainArmDrive.setPower(mArmPower);
             slideDrive.setPower(slidePower);
             leftClawDrive.setPosition(lClawPosition);
             rightClawDrive.setPosition(rClawPosition);
